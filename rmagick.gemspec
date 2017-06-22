@@ -10,14 +10,14 @@ RUBY     = v(RUBY_VERSION.dup)
 RUBYGEMS = v(Gem::VERSION.dup)
 
 Gem::Specification.new do |s|
-  s.name = 'rmagick'
+  s.name = 'rmagick_alpine'
   s.version = Magick::VERSION
   s.date = Date.today.to_s
   s.summary = 'Ruby binding to ImageMagick'
   s.description = 'RMagick is an interface between Ruby and ImageMagick.'
   s.authors = ['Tim Hunter', 'Omer Bar-or', 'Benjamin Thomas', 'Moncef Maiza']
-  s.email = 'github@benjaminfleischer.com'
-  s.homepage = 'https://github.com/rmagick/rmagick'
+  s.email = 'oxnote@gmail.com'
+  s.homepage = 'https://github.com/oxnote/rmagick-alpine'
   s.license = 'MIT'
 
   tracked_files = `git ls-files`.split($OUTPUT_RECORD_SEPARATOR)
