@@ -10,7 +10,7 @@ RUBY     = v(RUBY_VERSION.dup)
 RUBYGEMS = v(Gem::VERSION.dup)
 
 Gem::Specification.new do |s|
-  s.name = 'rmagick_alpine'
+  s.name = 'rmagick'
   s.version = Magick::VERSION
   s.date = Date.today.to_s
   s.summary = 'Ruby binding to ImageMagick'
