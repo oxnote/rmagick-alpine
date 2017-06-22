@@ -47,7 +47,7 @@ module RMagick
     end
 
     def configure_compile_options
-      # Magick-config is not available on Windows
+      # MagickCore-config is not available on Windows
       if RUBY_PLATFORM !~ /mswin|mingw/
 
         # Check for compiler. Extract first word so ENV['CC'] can be a program name with arguments.
@@ -62,15 +62,15 @@ module RMagick
         $magick_config = false
         $pkg_config = false
 
-        # Check for Magick-config
-        if find_executable('Magick-config') && !has_graphicsmagick_libmagick_dev_compat?
+        # Check for MagickCore-config
+        if find_executable('MagickCore-config') && !has_graphicsmagick_libmagick_dev_compat?
           $magick_config = true
-          $magick_version = `Magick-config --version`[/^(\d+\.\d+\.\d+)/]
+          $magick_version = `MagickCore-config --version`[/^(\d+\.\d+\.\d+)/]
         elsif find_executable('pkg-config')
           $pkg_config = true
           $magick_version = `pkg-config MagickCore --modversion`[/^(\d+\.\d+\.\d+)/]
         else
-          exit_failure "Can't install RMagick #{RMAGICK_VERS}. Can't find Magick-config or pkg-config in #{ENV['PATH']}\n"
+          exit_failure "Can't install RMagick #{RMAGICK_VERS}. Can't find MagickCore-config or pkg-config in #{ENV['PATH']}\n"
         end
 
         check_multiple_imagemagick_versions
@@ -97,7 +97,7 @@ module RMagick
           end
         end
 
-        # either set flags using Magick-config, MagickWand-config or pkg-config (new Debian default)
+        # either set flags using MagickCore-config, MagickWand-config or pkg-config (new Debian default)
         if $with_magick_wand
           if $magick_config
             # Save flags
@@ -117,10 +117,10 @@ module RMagick
         else
           if $magick_config
             # Save flags
-            $CFLAGS     = ENV['CFLAGS'].to_s   + ' ' + `Magick-config --cflags`.chomp
-            $CPPFLAGS   = ENV['CPPFLAGS'].to_s + ' ' + `Magick-config --cppflags`.chomp
-            $LDFLAGS    = ENV['LDFLAGS'].to_s  + ' ' + `Magick-config --ldflags`.chomp
-            $LOCAL_LIBS = ENV['LIBS'].to_s     + ' ' + `Magick-config --libs`.chomp
+            $CFLAGS     = ENV['CFLAGS'].to_s   + ' ' + `MagickCore-config --cflags`.chomp
+            $CPPFLAGS   = ENV['CPPFLAGS'].to_s + ' ' + `MagickCore-config --cppflags`.chomp
+            $LDFLAGS    = ENV['LDFLAGS'].to_s  + ' ' + `MagickCore-config --ldflags`.chomp
+            $LOCAL_LIBS = ENV['LIBS'].to_s     + ' ' + `MagickCore-config --libs`.chomp
           end
 
           if $pkg_config
@@ -186,7 +186,7 @@ SRC
     end
 
     def has_graphicsmagick_libmagick_dev_compat?
-      config_path = `which Magick-config`.chomp
+      config_path = `which MagickCore-config`.chomp
       if File.exist?(config_path) &&
          File.symlink?(config_path) &&
          File.readlink(config_path) =~ /GraphicsMagick/
@@ -210,7 +210,7 @@ SRC
       versions = []
       path = ENV['PATH'].split(File::PATH_SEPARATOR)
       path.each do |dir|
-        file = File.join(dir, 'Magick-config')
+        file = File.join(dir, 'MagickCore-config')
         if File.executable? file
           vers = `#{file} --version`.chomp.strip
           prefix = `#{file} --prefix`.chomp.strip
@@ -221,7 +221,7 @@ SRC
       if versions.size > 1
         msg = "\nWarning: Found more than one ImageMagick installation. This could cause problems at runtime.\n"
         versions.each do |vers, prefix, dir|
-          msg << "         #{dir}/Magick-config reports version #{vers} is installed in #{prefix}\n"
+          msg << "         #{dir}/MagickCore-config reports version #{vers} is installed in #{prefix}\n"
         end
         msg << "Using #{versions[0][0]} from #{versions[0][1]}.\n\n"
         Logging.message msg
@@ -238,7 +238,7 @@ SRC
       matches = [
         prefix+'/lib/lib?agick*',
         prefix+'/include/ImageMagick',
-        prefix+'/bin/Magick-config',
+        prefix+'/bin/MagickCore-config',
       ].map do |file_glob|
         Dir.glob(file_glob)
       end
@@ -334,9 +334,9 @@ END_MSWIN
     def assert_has_dev_libs!
       if RUBY_PLATFORM !~ /mswin|mingw/
 
-        # check for pkg-config if Magick-config doesn't exist
-        if $magick_config && `Magick-config --libs`[/\bl\s*(MagickCore|Magick)6?\b/]
-        elsif $pkg_config && `pkg-config --libs MagickCore`[/\bl\s*(MagickCore|Magick)6?\b/]
+        # check for pkg-config if MagickCore-config doesn't exist
+        if $magick_config && `MagickCore-config --libs`[/\bl\s*(MagickCore|Magick)7?\b/]
+        elsif $pkg_config && `pkg-config --libs MagickCore`[/\bl\s*(MagickCore|Magick)7?\b/]
         else
             exit_failure "Can't install RMagick #{RMAGICK_VERS}. " \
                    "Can't find the ImageMagick library or one of the dependent libraries. " \
